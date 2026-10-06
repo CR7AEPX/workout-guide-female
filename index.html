@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Home Workout Program</title>
+<style>
+
+:root{
+  --bg:#f5f5f3;
+  --surface:#ffffff;
+  --surface-soft:#fafaf8;
+  --ink:#181817;
+  --ink-2:#343431;
+  --muted:#777773;
+  --muted-2:#989894;
+  --line:rgba(24,24,23,.10);
+  --line-soft:rgba(24,24,23,.065);
+  --rose:#d96373;
+  --rose-soft:#f8e8eb;
+  --sage:#668b78;
+  --sage-soft:#eaf1ed;
+  --peach:#c9825f;
+  --peach-soft:#f7ebe4;
+  --radius-sm:12px;
+  --radius-md:18px;
+  --radius-lg:24px;
+  --radius-xl:30px;
+  --shadow-1:0 1px 2px rgba(0,0,0,.03),0 8px 28px rgba(0,0,0,.035);
+  --shadow-2:0 10px 36px rgba(0,0,0,.07);
+  --s1:4px;--s2:8px;--s3:12px;--s4:16px;--s5:20px;--s6:24px;--s7:32px;--s8:40px;--s9:48px;--s10:64px;
+  --ease:cubic-bezier(.2,.8,.2,1);
+  --header:64px;
+  --nav:72px;
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text",Inter,sans-serif;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{background:#e9e9e7;scroll-behavior:smooth}
+body{margin:0;min-width:320px;color:var(--ink);background:#e9e9e7;overflow-x:hidden}
+button,a{font:inherit}
+button{color:inherit;border:0;background:none}
+a{color:inherit}
+svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+button:focus-visible,a:focus-visible{outline:3px solid rgba(70,105,180,.32);outline-offset:3px}
+.app{position:relative;width:min(100%,480px);min-height:100svh;margin:auto;background:var(--bg);overflow:hidden}
+@media(min-width:600px){
+  body{padding:24px 0}
+  .app{min-height:calc(100svh - 48px);border-radius:30px;box-shadow:0 30px 90px rgba(0,0,0,.13)}
+}
+.header{
+  position:fixed;z-index:50;top:0;left:50%;transform:translateX(-50%);
+  width:min(100%,480px);height:calc(var(--header) + env(safe-area-inset-top));
+  padding:env(safe-area-inset-top) 18px 0;
+  display:flex;align-items:center;justify-content:space-between;
+  background:rgba(245,245,243,.78);
+  border-bottom:1px solid var(--line-soft);
+  backdrop-filter:saturate(180%) blur(20px);
+  -webkit-backdrop-filter:saturate(180%) blur(20px);
+}
+@media(min-width:600px){.header{top:24px;border-radius:30px 30px 0 0}}
+.header-brand{display:flex;align-items:center;gap:11px;min-width:0}
+.brand-mark{width:34px;height:34px;border-radius:11px;background:#fff;display:grid;place-items:center;color:var(--rose);border:1px solid var(--line-soft)}
+.brand-mark svg{width:18px;height:18px}
+.brand-name{font-size:13px;font-weight:720;letter-spacing:-.1px;white-space:nowrap}
+.brand-caption{font-size:9px;color:var(--muted);margin-top:2px;letter-spacing:.02em}
+.header-context{font-size:10px;color:var(--muted);font-weight:650;white-space:nowrap}
+main{padding:calc(var(--header) + env(safe-area-inset-top) + 8px) 20px calc(var(--nav) + env(safe-area-inset-bottom) + 32px)}
+.view{display:none}
+.view.active{display:block;animation:viewIn 220ms var(--ease)}
+@keyframes viewIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+.hero{padding:var(--s8) 0 var(--s7)}
+.eyebrow{font-size:10px;line-height:1.2;font-weight:780;letter-spacing:.13em;color:var(--muted);text-transform:uppercase}
+.hero h1{margin:10px 0 12px;font-size:38px;line-height:1.02;letter-spacing:-1.65px;font-weight:760}
+.hero-copy{max-width:380px;margin:0;color:var(--muted);font-size:14px;line-height:1.52;letter-spacing:-.05px}
+.program-meta{display:flex;align-items:center;gap:10px;margin-top:18px}
+.program-meta .badge{display:inline-flex;align-items:center;min-height:30px;padding:0 11px;border-radius:99px;background:var(--rose-soft);color:#a84e5e;font-size:10px;font-weight:760}
+.program-meta .meta{font-size:10px;color:var(--muted);font-weight:650}
+.segmented{
+  position:sticky;top:calc(var(--header) + env(safe-area-inset-top) + 7px);z-index:30;
+  display:grid;grid-template-columns:repeat(3,1fr);gap:3px;padding:3px;
+  margin:0 -2px var(--s7);background:rgba(118,118,128,.12);border-radius:15px;
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)
+}
+.segment{min-height:50px;border-radius:12px;padding:6px 3px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:var(--muted);transition:transform 160ms var(--ease),background 180ms var(--ease),color 180ms var(--ease)}
+.segment .day{font-size:11px;font-weight:780}
+.segment .focus{font-size:9px;font-weight:600;white-space:nowrap}
+.segment.active{color:var(--ink);background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.07)}
+.segment:active{transform:scale(.98)}
+.day-panel{display:none}.day-panel.active{display:block}
+.workout-hero{padding:0 0 var(--s7)}
+.workout-kicker{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:10px;font-weight:780;letter-spacing:.11em;text-transform:uppercase}
+.workout-kicker .rule{width:20px;height:1px;background:currentColor;opacity:.45}
+.workout-title{font-size:31px;line-height:1.04;letter-spacing:-1.2px;font-weight:750;margin:9px 0 8px}
+.workout-sub{font-size:12px;color:var(--muted);margin:0;line-height:1.45}
+.workout-accent{display:inline-flex;align-items:center;gap:7px;margin-top:16px;font-size:10px;font-weight:720;color:var(--ink-2)}
+.accent-dot{width:7px;height:7px;border-radius:50%}.rose{background:var(--rose)}.sage{background:var(--sage)}.peach{background:var(--peach)}
+.exercise-list{display:grid;gap:0}
+.exercise{
+  position:relative;padding:0 0 var(--s7);margin-bottom:var(--s7);
+  border-bottom:1px solid var(--line);
+}
+.exercise:last-child{margin-bottom:0}
+.exercise-top{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:17px}
+.exercise-index{font-size:10px;color:var(--muted-2);font-weight:780;letter-spacing:.1em;padding-top:4px}
+.exercise-name{margin:0;flex:1;font-size:21px;line-height:1.13;letter-spacing:-.55px;font-weight:700}
+.exercise-volume{text-align:right;min-width:84px}
+.volume-label{display:block;font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted-2);font-weight:780}
+.volume-value{display:block;margin-top:4px;font-size:12px;font-weight:760;letter-spacing:-.1px}
+.exercise-media{
+  position:relative;aspect-ratio:16/9;overflow:hidden;border-radius:var(--radius-lg);
+  background:linear-gradient(145deg,#e8e4df,#d8d6d1);border:1px solid rgba(24,24,23,.08);
+  box-shadow:var(--shadow-1);margin-bottom:15px
+}
+.exercise:nth-child(2n) .exercise-media{background:linear-gradient(145deg,#e7eee9,#dce6df)}
+.exercise:nth-child(3n) .exercise-media{background:linear-gradient(145deg,#f1e4df,#e8d7d0)}
+.media-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.16) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.16) 1px,transparent 1px);background-size:32px 32px;opacity:.28}
+.media-copy{position:absolute;left:18px;top:17px;right:18px}
+.media-label{font-size:8px;letter-spacing:.15em;font-weight:820;color:rgba(24,24,23,.52)}
+.media-number{font-size:52px;line-height:.9;letter-spacing:-3px;font-weight:760;color:rgba(24,24,23,.11);margin-top:8px}
+.play{
+  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  width:56px;height:56px;border-radius:50%;display:grid;place-items:center;
+  color:#fff;background:rgba(24,24,23,.86);box-shadow:0 8px 20px rgba(0,0,0,.16);
+  transition:transform 170ms var(--ease),background 170ms var(--ease)
+}
+.play svg{width:19px;height:19px;margin-left:2px}
+.video-link:hover .play{transform:translate(-50%,-50%) scale(1.04);background:#111}
+.media-bottom{position:absolute;left:18px;right:18px;bottom:16px;display:flex;align-items:end;justify-content:space-between;gap:10px}
+.media-name{font-size:11px;font-weight:720;max-width:72%;line-height:1.25}
+.media-action{font-size:9px;font-weight:760;letter-spacing:.06em;text-transform:uppercase;color:rgba(24,24,23,.58)}
+.technique{margin:0 0 15px;color:var(--ink-2);font-size:12px;line-height:1.55}
+.technique strong{font-weight:760;color:var(--ink)}
+.tempo-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-top:12px;border-top:1px solid var(--line-soft)}
+.tempo-label{font-size:9px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted-2);font-weight:780}
+.tempo{font-size:10px;color:var(--muted);font-weight:680;text-align:right}
+.info-strip{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:0 0 var(--s8);padding:14px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.info-strip-title{font-size:11px;font-weight:760}.info-strip-copy{font-size:10px;color:var(--muted);text-align:right;line-height:1.4}
+.editorial-hero{padding:var(--s9) 0 var(--s8)}
+.editorial-hero h1{margin:9px 0 12px;font-size:38px;line-height:1.02;letter-spacing:-1.6px}
+.editorial-hero p{margin:0;color:var(--muted);font-size:14px;line-height:1.55}
+.timeline{position:relative;margin-top:var(--s8);padding-bottom:var(--s4)}
+.timeline::before{content:"";position:absolute;left:17px;top:9px;bottom:13px;width:1px;background:var(--line)}
+.milestone{position:relative;display:grid;grid-template-columns:36px 1fr;gap:18px;padding-bottom:var(--s8)}
+.milestone:last-child{padding-bottom:0}
+.marker{position:relative;z-index:2;width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:var(--bg);border:1px solid var(--line);font-size:10px;font-weight:800;color:var(--rose)}
+.milestone-content{padding-top:1px}
+.milestone-kicker{font-size:9px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted-2);font-weight:800}
+.milestone h2{margin:7px 0 7px;font-size:21px;line-height:1.14;letter-spacing:-.45px}
+.milestone p{margin:0;color:var(--muted);font-size:12px;line-height:1.55}
+.progress-note{margin-top:var(--s8);padding:18px 0;border-top:1px solid var(--line);display:flex;gap:13px}
+.note-icon{width:34px;height:34px;border-radius:11px;display:grid;place-items:center;background:var(--sage-soft);color:var(--sage);flex:none}
+.note-copy b{font-size:11px}.note-copy p{margin:3px 0 0;font-size:10px;color:var(--muted);line-height:1.5}
+.rule-section{padding:var(--s8) 0;border-bottom:1px solid var(--line)}
+.rule-section:first-of-type{padding-top:0}
+.rule-section:last-of-type{border-bottom:0}
+.rule-kicker{display:flex;align-items:center;gap:9px;font-size:9px;text-transform:uppercase;letter-spacing:.14em;font-weight:800;color:var(--muted-2)}
+.rule-kicker svg{width:17px;height:17px}
+.rule-section h2{font-size:25px;letter-spacing:-.7px;line-height:1.1;margin:9px 0 9px}
+.rule-section p{font-size:13px;line-height:1.58;color:var(--muted);margin:0;max-width:410px}
+.rule-highlight{margin-top:15px;padding:15px 0;border-left:2px solid var(--rose);padding-left:15px}
+.rule-highlight strong{font-size:13px}.rule-highlight span{display:block;margin-top:4px;color:var(--muted);font-size:11px;line-height:1.5}
+.schedule{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:15px}
+.schedule-day{min-height:58px;padding:9px 8px;border:1px solid var(--line);border-radius:14px;background:#fff}
+.schedule-day b{display:block;font-size:10px}.schedule-day span{display:block;margin-top:4px;color:var(--muted);font-size:9px}
+.disclaimer{margin:var(--s8) 0 0;font-size:9px!important;line-height:1.5!important;color:var(--muted-2)!important}
+.bottom-nav{
+  position:fixed;z-index:60;left:50%;transform:translateX(-50%);bottom:0;width:min(100%,480px);
+  padding:7px 10px calc(7px + env(safe-area-inset-bottom));
+  display:grid;grid-template-columns:repeat(3,1fr);gap:4px;
+  background:rgba(245,245,243,.82);border-top:1px solid var(--line-soft);
+  backdrop-filter:saturate(180%) blur(24px);-webkit-backdrop-filter:saturate(180%) blur(24px)
+}
+@media(min-width:600px){.bottom-nav{bottom:24px;border-radius:0 0 30px 30px}}
+.nav-item{min-height:50px;border-radius:14px;display:flex;align-items:center;justify-content:center;gap:7px;color:var(--muted);font-size:10px;font-weight:720;transition:transform 150ms var(--ease),color 180ms var(--ease),background 180ms var(--ease)}
+.nav-item svg{width:20px;height:20px}
+.nav-item.active{color:var(--ink);background:rgba(255,255,255,.9)}
+.nav-item.active svg{color:var(--rose)}
+.nav-item:active{transform:scale(.98)}
+@media(max-width:350px){
+  main{padding-left:16px;padding-right:16px}
+  .hero h1,.editorial-hero h1{font-size:34px}
+  .exercise-name{font-size:19px}
+  .volume-value{font-size:11px}
+  .segment .focus{font-size:8px}
+}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+
+.video-link{display:block;text-decoration:none}
+</style>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#F5F5F3">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Workout Guide">
+  <link rel="apple-touch-icon" href="icon.svg">
+</head>
+<body>
+<div class="app">
+<header class="header" aria-label="App header">
+  <div class="header-brand">
+    <div class="brand-mark"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 8v8M18 8v8M3.5 10.5v3M20.5 10.5v3M6 12h12M8.5 6.5v11M15.5 6.5v11"/></svg></div>
+    <div><div class="brand-name">Home Workout Program</div><div class="brand-caption">A calm strength practice</div></div>
+  </div>
+  <div class="header-context">30 min · 3× week</div>
+</header>
+
+<main>
+  <section class="view active" id="view-workouts" aria-label="Workouts">
+    <div class="hero">
+      <div class="eyebrow">Home Workout Program</div>
+      <h1>Build strength.<br>Move with control.</h1>
+      <p class="hero-copy">A focused 30-minute practice designed to gently build lean muscle and support consistent movement.</p>
+      <div class="program-meta"><span class="badge">PCOS Friendly</span><span class="meta">3× a week · non-consecutive days</span></div>
+    </div>
+    <div class="segmented" role="tablist" aria-label="Choose workout day">
+      <button class="segment active" role="tab" aria-selected="true" data-day="day1"><span class="day">Day 1</span><span class="focus">Glutes & Legs</span></button>
+      <button class="segment" role="tab" aria-selected="false" data-day="day2"><span class="day">Day 2</span><span class="focus">Upper & Core</span></button>
+      <button class="segment" role="tab" aria-selected="false" data-day="day3"><span class="day">Day 3</span><span class="focus">Full Body</span></button>
+    </div>
+    
+<section class="day-panel active" id="day1" aria-label="Glutes &amp; Legs">
+  <div class="workout-hero">
+    <div class="workout-kicker"><span>DAY 01</span><span class="rule"></span><span>4 exercises</span></div>
+    <h2 class="workout-title">Glutes &amp; Legs</h2>
+    <p class="workout-sub">Strength · Control · Stability</p>
+    <div class="workout-accent"><span class="accent-dot rose"></span>Control every rep</div>
+  </div>
+  <div class="exercise-list">
+<article class="exercise">
+  <div class="exercise-top">
+    <span class="exercise-index">01</span>
+    <h2 class="exercise-name">Bulgarian Split Squats</h2>
+    <div class="exercise-volume"><span class="volume-label">Volume</span><span class="volume-value">3 × 8–12 / leg</span></div>
+  </div>
+  <a class="video-link" href="https://www.youtube.com/results?search_query=Bulgarian+Split+Squats+exercise+technique+female" target="_blank" rel="noopener noreferrer" aria-label="Watch technique video for Bulgarian Split Squats">
+    <div class="exercise-media">
+      <div class="media-grid"></div>
+      <div class="media-copy"><div class="media-label">TECHNIQUE VIDEO</div><div class="media-number">01</div></div>
+      <span class="play"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 9 6-9 6V6Z"/></svg></span>
+      <div class="media-bottom"><span class="media-name">Bulgarian Split Squats</span><span class="media-action">Watch technique</span></div>
+    </div>
+  </a>
+  <p class="technique"><strong>Technique:</strong> Set the rear foot lightly on a stable chair. Keep the front heel grounded, lower with control, pause, then drive through the whole front foot.</p>
+  <div class="tempo-row"><span class="tempo-label">Tempo</span><span class="tempo">3s lowering • 1s pause • 1s up</span></div>
+</article>
+<article class="exercise">
+  <div class="exercise-top">
+    <span class="exercise-index">02</span>
+    <h2 class="exercise-name">Single-Leg Glute Bridge on Chair</h2>
+    <div class="exercise-volume"><span class="volume-label">Volume</span><span class="volume-value">3 × 12–15 / leg</span></div>
+  </div>
+  <a class="video-link" href="https://www.youtube.com/results?search_query=Single-Leg+Glute+Bridge+on+Chair+exercise+technique+female" target="_blank" rel="noopener noreferrer" aria-label="Watch technique video for Single-Leg Glute Bridge on Chair">
+    <div class="exercise-media">
+      <div class="media-grid"></div>
+      <div class="media-copy"><div class="media-label">TECHNIQUE VIDEO</div><div class="media-number">02</div></div>
+      <span class="play"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 9 6-9 6V6Z"/></svg></span>
+      <div class="media-bottom"><span class="media-name">Single-Leg Glute Bridge on Chair</span><span class="media-action">Watch technique</span></div>
+    </div>
+  </a>
+  <p class="technique"><strong>Technique:</strong> Place one heel on a stable chair. Lift through the supported heel, squeeze the glute at the top, then lower slowly.</p>
+  <div class="tempo-row"><span class="tempo-label">Tempo</span><span class="tempo">3s down • 2s hold at top</span></div>
+</article>
+<article class="exercise">
+  <div class="exercise-top">
+    <span class="exercise-index">03</span>
+    <h2 class="exercise-name">Paused Sumo Squats</h2>
+    <div class="exercise-volume"><span class="volume-label">Volume</span><span class="volume-value">3 × 12–15</span></div>
+  </div>
+  <a class="video-link" href="https://www.youtube.com/results?search_query=Paused+Sumo+Squats+exercise+technique+female" target="_blank" rel="noopener noreferrer" aria-label="Watch technique video for Paused Sumo Squats">
+    <div class="exercise-media">
+      <div class="media-grid"></div>
+      <div class="media-copy"><div class="media-label">TECHNIQUE VIDEO</div><div class="media-number">03</div></div>
+      <span class="play"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 9 6-9 6V6Z"/></svg></span>
+      <div class="media-bottom"><span class="media-name">Paused Sumo Squats</span><span class="media-action">Watch technique</span></div>
+    </div>
+  </a>
+  <p class="technique"><strong>Technique:</strong> Use a wide stance with toes slightly turned out. Lower between the hips, keep knees tracking over toes, pause, then stand tall.</p>
+  <div class="tempo-row"><span class="tempo-label">Tempo</span><span class="tempo">3s down • 2s pause • 1s up</span></div>
+</article>
+<article class="exercise">
+  <div class="exercise-top">
+    <span class="exercise-index">04</span>
+    <h2 class="exercise-name">Reverse Lunges</h2>
+    <div class="exercise-volume"><span class="volume-label">Volume</span><span class="volume-value">3 × 10–12 / leg</span></div>
+  </div>
+  <a class="video-link" href="https://www.youtube.com/results?search_query=Reverse+Lunges+exercise+technique+female" target="_blank" rel="noopener noreferrer" aria-label="Watch technique video for Reverse Lunges">
+    <div class="exercise-media">
+      <div class="media-grid"></div>
+      <div class="media-copy"><div class="media-label">TECHNIQUE VIDEO</div><div class="media-number">04</div></div>
+      <span class="play"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 9 6-9 6V6Z"/></svg></span>
+      <div class="media-bottom"><span class="media-name">Reverse Lunges</span><span class="media-action">Watch technique</span></div>
+    </div>
+  </a>
+  <p class="technique"><strong>Technique:</strong> Step one foot back and lower straight down while keeping the front foot stable. Push through the front foot to return.</p>
+  <div class="tempo-row"><span class="tempo-label">Tempo</span><span class="tempo">Smooth descent • controlled ascent</span></div>
+</article></div>
+</section>
+<section class="day-panel" id="day2" aria-label="Upper Body, Back &amp; Core">
+  <div class="workout-hero">
+    <div class="workout-kicker"><span>DAY 02</span><span class="rule"></span><span>5 exercises</span></div>
+    <h2 class="workout-title">Upper Body, Back &amp; Core</h2>
+    <p class="workout-sub">Posture · Core · Upper-body strength</p>
+    <div class="workout-accent"><span class="accent-dot sage"></span>Control every rep</div>
+  </div>
+  <div class="exercise-list">
+<article class="exercise">
+  <div class="exercise-top">
+    <span class="exercise-index">01</span>
+    <h2 class="exercise-name">Incline Push-Ups on Table / Couch</h2>
+    <div class="exercise-volume"><span class="volume-label">Volume</span><span class="volume-value">3 × 8–12</span></div>
+  </div>
+  <a class="video-link" href="https://www.youtube.com/results?search_query=Incline+Push-Ups+on+Table+/+Couch+exercise+technique+female" target="_blank" rel="noopener noreferrer" aria-label="Watch technique video for Incline Push-Ups on Table / Couch">
+    <div class="exercise-media">
+      <div class="media-grid"></div>
+      <div class="media-copy"><div class="media-label">TECHNIQUE VIDEO</div><div class="media-number">01</div></div>
+      <span class="play"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 9 6-9 6V6Z"/></svg></span>
+      <div class="media-bottom"><span class="media-name">Incline Push-Ups on Table / Couch</span><span class="media-action">Watch technique</span></div>
+    </div>
+  </a>
+  <p class="technique"><strong>Technique:</strong> Place hands on a sturdy table or couch. Keep a straight body line, lower the chest toward the support, pause, then press away.</p>
+  <div class="tempo-row"><span class="tempo-label">Tempo</span><span class="tempo">3s down • 1s pause • controlled press</span></div>
+</article>
+<article class="exercise">
+  <div class="exercise-top">
+    <span class="exercise-index">02</span>
+    <h2 class="exercise-name">Superman Floor Rows</h2>
+    <div class="exercise-volume"><span class="volume-label">Volume</span><span class="volume-value">3 × 12–15</span></div>
+  </div>
+  <a class="video-link" href="https://www.youtube.com/results?search_query=Superman+Floor+Rows+exercise+technique+female" target="_blank" rel="noopener noreferrer" aria-label="Watch technique video for Superman Floor Rows">
+    <div class="exercise-media">
+      <div class="media-grid"></div>
+      <div class="media-copy"><div class="media-label">TECHNIQUE VIDEO</div><div class="media-number">02</div></div>
+      <span class="play"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 9 6-9 6V6Z"/></svg></span>
+      <div class="media-bottom"><span class="media-name">Superman Floor Rows</span><span class="media-action">Watch technique</span></div>
+    </div>
+  </a>
+  <p class="technique"><strong>Technique:</strong> Lie face down. Gently lift the chest, squeeze the shoulder blades and pull the elbows toward your sides, then extend.</p>
+  <div class="tempo-row"><span class="tempo-label">Tempo</span><span class="tempo">Controlled pull • shoulder-blade squeeze</span></div>
+</article>
+<article class="exercise">
+  <div class="exercise-top">
+    <span class="exercise-index">03</span>
+    <h2 class="exercise-name">Triceps Chair Dips</h2>
+    <div class="exercise-volume"><span class="volume-label">Volume</span><span class="volume-value">3 × 8–12</span></div>
+  </div>
+  <a class="video-link" href="https://www.youtube.com/results?search_query=Triceps+Chair+Dips+exercise+technique+female" target="_blank" rel="noopener noreferrer" aria-label="Watch technique video for Triceps Chair Dips">
+    <div class="exercise-media">
+      <div class="media-grid"></div>
+      <div class="media-copy"><div class="media-label">TECHNIQUE VIDEO</div><div class="media-number">03</div></div>
+      <span class="play"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 9 6-9 6V6Z"/></svg></span>
+      <div class="media-bottom"><span class="media-name">Triceps Chair Dips</span><span class="media-action">Watch technique</span></div>
+    </div>
+  </a>
+  <p class="technique"><strong>Technique:</strong> Use a very stable chair. Keep shoulders relaxed, hips close to the edge, lower only as far as comfortable, then press up.</p>
+  <div class="tempo-row"><span class="tempo-label">Tempo</span><span class="tempo">3s down • keep back close to chair</span></div>
+</article>
+<article class="exercise">
+  <div class="exercise-top">
+    <span class="exercise-index">04</span>
+    <h2 class="exercise-name">Plank Shoulder Taps</h2>
+    <div class="exercise-volume"><span class="volume-label">Volume</span><span class="volume-value">3 × 8–10 taps / arm</span></div>
+  </div>
+  <a class="video-link" href="https://www.youtube.com/results?search_query=Plank+Shoulder+Taps+exercise+technique+female" target="_blank" rel="noopener noreferrer" aria-label="Watch technique video for Plank Shoulder Taps">
+    <div class="exercise-media">
+      <div class="media-grid"></div>
+      <div class="media-copy"><div class="media-label">TECHNIQUE VIDEO</div><div class="media-number">04</div></div>
+      <span class="play"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 9 6-9 6V6Z"/></svg></span>
+      <div class="media-bottom"><span class="media-name">Plank Shoulder Taps</span><span class="media-action">Watch technique</span></div>
+    </div>
+  </a>
+  <p class="technique"><strong>Technique:</strong> Start in a high plank with feet slightly wider than hips. Brace the core and slowly tap the opposite shoulder without rocking.</p>
+  <div class="tempo-row"><span class="tempo-label">Tempo</span><span class="tempo">Keep hips as stable as possible</span></div>
+</article>
+<article class="exercise">
+  <div class="exercise-top">
+    <span class="exercise-index">05</span>
+    <h2 class="exercise-name">Side Plank</h2>
+    <div class="exercise-volume"><span class="volume-label">Volume</span><span class="volume-value">2 × 30–45 sec / side</span></div>
+  </div>
+  <a class="video-link" href="https://www.youtube.com/results?search_query=Side+Plank+exercise+technique+female" target="_blank" rel="noopener noreferrer" aria-label="Watch technique video for Side Plank">
+    <div class="exercise-media">
+      <div class="media-grid"></div>
+      <div class="media-copy"><div class="media-label">TECHNIQUE VIDEO</div><div class="media-number">05</div></div>
+      <span class="play"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 9 6-9 6V6Z"/></svg></span>
+      <div class="media-bottom"><span class="media-name">Side Plank</span><span class="media-action">Watch technique</span></div>
+    </div>
+  </a>
+  <p class="technique"><strong>Technique:</strong> Stack or stagger the feet, brace the waist, and lift the hips into one long line. Keep the supporting shoulder stable.</p>
+  <div class="tempo-row"><span class="tempo-label">Tempo</span><span class="tempo">Steady breathing • hips lifted</span></div>
+</article></div>
+</section>
+<section class="day-panel" id="day3" aria-label="Full Body">
+  <div class="workout-hero">
+    <div class="workout-kicker"><span>DAY 03</span><span class="rule"></span><span>5 exercises</span></div>
+    <h2 class="workout-title">Full Body</h2>
+    <p class="workout-sub">Strength · Balance · Full-body control</p>
+    <div class="workout-accent"><span class="accent-dot peach"></span>Control every rep</div>
+  </div>
+  <div class="exercise-list">
+<article class="exercise">
+  <div class="exercise-top">
+    <span class="exercise-index">01</span>
+    <h2 class="exercise-name">Single-Leg Chair Squats</h2>
+    <div class="exercise-volume"><span class="volume-label">Volume</span><span class="volume-value">3 × 8–10 / leg</span></div>
+  </div>
+  <a class="video-link" href="https://www.youtube.com/results?search_query=Single-Leg+Chair+Squats+exercise+technique+female" target="_blank" rel="noopener noreferrer" aria-label="Watch technique video for Single-Leg Chair Squats">
+    <div class="exercise-media">
+      <div class="media-grid"></div>
+      <div class="media-copy"><div class="media-label">TECHNIQUE VIDEO</div><div class="media-number">01</div></div>
+      <span class="play"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 9 6-9 6V6Z"/></svg></span>
+      <div class="media-bottom"><span class="media-name">Single-Leg Chair Squats</span><span class="media-action">Watch technique</span></div>
+    </div>
+  </a>
+  <p class="technique"><strong>Technique:</strong> Stand in front of a stable chair. Extend one leg forward, lower slowly on the working leg, lightly tap the chair, then stand.</p>
+  <div class="tempo-row"><span class="tempo-label">Tempo</span><span class="tempo">3s down • light chair tap • stand</span></div>
+</article>
+<article class="exercise">
+  <div class="exercise-top">
+    <span class="exercise-index">02</span>
+    <h2 class="exercise-name">Knee Push-Ups with Pause</h2>
+    <div class="exercise-volume"><span class="volume-label">Volume</span><span class="volume-value">3 × 8–10</span></div>
+  </div>
+  <a class="video-link" href="https://www.youtube.com/results?search_query=Knee+Push-Ups+with+Pause+exercise+technique+female" target="_blank" rel="noopener noreferrer" aria-label="Watch technique video for Knee Push-Ups with Pause">
+    <div class="exercise-media">
+      <div class="media-grid"></div>
+      <div class="media-copy"><div class="media-label">TECHNIQUE VIDEO</div><div class="media-number">02</div></div>
+      <span class="play"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 9 6-9 6V6Z"/></svg></span>
+      <div class="media-bottom"><span class="media-name">Knee Push-Ups with Pause</span><span class="media-action">Watch technique</span></div>
+    </div>
+  </a>
+  <p class="technique"><strong>Technique:</strong> Start from the knees with hands slightly wider than shoulders. Lower slowly, pause close to the floor, then press up.</p>
+  <div class="tempo-row"><span class="tempo-label">Tempo</span><span class="tempo">3s down • 2s pause • controlled push</span></div>
+</article>
+<article class="exercise">
+  <div class="exercise-top">
+    <span class="exercise-index">03</span>
+    <h2 class="exercise-name">Walking Lunges</h2>
+    <div class="exercise-volume"><span class="volume-label">Volume</span><span class="volume-value">3 × 10 steps / leg</span></div>
+  </div>
+  <a class="video-link" href="https://www.youtube.com/results?search_query=Walking+Lunges+exercise+technique+female" target="_blank" rel="noopener noreferrer" aria-label="Watch technique video for Walking Lunges">
+    <div class="exercise-media">
+      <div class="media-grid"></div>
+      <div class="media-copy"><div class="media-label">TECHNIQUE VIDEO</div><div class="media-number">03</div></div>
+      <span class="play"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 9 6-9 6V6Z"/></svg></span>
+      <div class="media-bottom"><span class="media-name">Walking Lunges</span><span class="media-action">Watch technique</span></div>
+    </div>
+  </a>
+  <p class="technique"><strong>Technique:</strong> Take a comfortable forward step, lower with the front knee tracking over the foot, push through the front foot, and continue.</p>
+  <div class="tempo-row"><span class="tempo-label">Tempo</span><span class="tempo">Controlled, even steps</span></div>
+</article>
+<article class="exercise">
+  <div class="exercise-top">
+    <span class="exercise-index">04</span>
+    <h2 class="exercise-name">Superman Back Extensions</h2>
+    <div class="exercise-volume"><span class="volume-label">Volume</span><span class="volume-value">3 × 12–15</span></div>
+  </div>
+  <a class="video-link" href="https://www.youtube.com/results?search_query=Superman+Back+Extensions+exercise+technique+female" target="_blank" rel="noopener noreferrer" aria-label="Watch technique video for Superman Back Extensions">
+    <div class="exercise-media">
+      <div class="media-grid"></div>
+      <div class="media-copy"><div class="media-label">TECHNIQUE VIDEO</div><div class="media-number">04</div></div>
+      <span class="play"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 9 6-9 6V6Z"/></svg></span>
+      <div class="media-bottom"><span class="media-name">Superman Back Extensions</span><span class="media-action">Watch technique</span></div>
+    </div>
+  </a>
+  <p class="technique"><strong>Technique:</strong> Lie face down. Gently lift chest and legs only as high as comfortable, pause at the top, then lower with control.</p>
+  <div class="tempo-row"><span class="tempo-label">Tempo</span><span class="tempo">2s hold at top</span></div>
+</article>
+<article class="exercise">
+  <div class="exercise-top">
+    <span class="exercise-index">05</span>
+    <h2 class="exercise-name">Classic Forearm Plank</h2>
+    <div class="exercise-volume"><span class="volume-label">Volume</span><span class="volume-value">3 × 45–60 sec</span></div>
+  </div>
+  <a class="video-link" href="https://www.youtube.com/results?search_query=Classic+Forearm+Plank+exercise+technique+female" target="_blank" rel="noopener noreferrer" aria-label="Watch technique video for Classic Forearm Plank">
+    <div class="exercise-media">
+      <div class="media-grid"></div>
+      <div class="media-copy"><div class="media-label">TECHNIQUE VIDEO</div><div class="media-number">05</div></div>
+      <span class="play"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 9 6-9 6V6Z"/></svg></span>
+      <div class="media-bottom"><span class="media-name">Classic Forearm Plank</span><span class="media-action">Watch technique</span></div>
+    </div>
+  </a>
+  <p class="technique"><strong>Technique:</strong> Place forearms under shoulders and extend legs back. Keep ribs gently tucked, glutes engaged, and body in one long line.</p>
+  <div class="tempo-row"><span class="tempo-label">Tempo</span><span class="tempo">Steady breathing • full-body brace</span></div>
+</article></div>
+</section>
+    <div class="info-strip"><span class="info-strip-title">Training principle</span><span class="info-strip-copy">Slow down.<br>Own the movement.</span></div>
+  </section>
+
+  <section class="view" id="view-progression" aria-label="Progression">
+    <div class="editorial-hero">
+      <div class="eyebrow">Progression</div>
+      <h1>Build control first.<br>Then build capacity.</h1>
+      <p>Keep the structure familiar while gradually improving the quality and challenge of each movement.</p>
+    </div>
+    <div class="timeline">
+      <article class="milestone"><div class="marker">01</div><div class="milestone-content"><div class="milestone-kicker">Weeks 1–2</div><h2>Master form and slow tempo.</h2><p>Learn each movement with a controlled 3-second lowering phase. Prioritize position, balance and confidence.</p></div></article>
+      <article class="milestone"><div class="marker">02</div><div class="milestone-content"><div class="milestone-kicker">Weeks 3–4</div><h2>Gradually increase reps.</h2><p>Move toward the upper end of each prescribed range while keeping the same clean technique.</p></div></article>
+      <article class="milestone"><div class="marker">03</div><div class="milestone-content"><div class="milestone-kicker">Weeks 5–6</div><h2>Extend the pauses.</h2><p>Where prescribed, gradually extend the bottom pause from 1 second toward 2–3 seconds without losing control.</p></div></article>
+    </div>
+    <div class="progress-note"><div class="note-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 8.5c0 5-8 10-8 10s-8-5-8-10A4.5 4.5 0 0 1 12 6a4.5 4.5 0 0 1 8 2.5Z"/></svg></div><div class="note-copy"><b>Progress should feel sustainable.</b><p>Consistency and movement quality matter more than rushing to make a session harder.</p></div></div>
+  </section>
+
+  <section class="view" id="view-rules" aria-label="Rules and PCOS">
+    <div class="editorial-hero">
+      <div class="eyebrow">Rules & PCOS</div>
+      <h1>A simple rhythm<br>for your week.</h1>
+      <p>Keep the plan clear, repeatable and easy to return to.</p>
+    </div>
+    <section class="rule-section">
+      <div class="rule-kicker"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="3"/><path d="M8 3v4M16 3v4M4 9h16"/></svg><span>Schedule</span></div>
+      <h2>Monday — Wednesday — Friday.</h2>
+      <p>Or choose any three non-consecutive days that fit your week. The goal is a rhythm you can sustain.</p>
+      <div class="schedule"><div class="schedule-day"><b>Monday</b><span>Workout 1</span></div><div class="schedule-day"><b>Wednesday</b><span>Workout 2</span></div><div class="schedule-day"><b>Friday</b><span>Workout 3</span></div></div>
+    </section>
+    <section class="rule-section">
+      <div class="rule-kicker"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 8v8M18 8v8M3.5 10.5v3M20.5 10.5v3M6 12h12M8.5 6.5v11M15.5 6.5v11"/></svg><span>Key rule</span></div>
+      <h2>Movement control.</h2>
+      <p>Lower slowly with a 3-second count and pause at the point of maximum tension when the exercise calls for it.</p>
+      <div class="rule-highlight"><strong>Quality over speed.</strong><span>A controlled rep is the goal—not simply completing the movement quickly.</span></div>
+    </section>
+    <section class="rule-section">
+      <div class="rule-kicker"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 8.5c0 5-8 10-8 10s-8-5-8-10A4.5 4.5 0 0 1 12 6a4.5 4.5 0 0 1 8 2.5Z"/></svg><span>PCOS tip</span></div>
+      <h2>Keep intensity steady.</h2>
+      <p>Focus on sustainable training and consistent movement rather than chasing exhaustion. Individual responses to exercise vary.</p>
+    </section>
+    <p class="disclaimer">This guide is educational and does not replace individualized medical advice. If you have medical conditions, symptoms, pain, or questions about exercise suitability, consult an appropriately qualified healthcare professional.</p>
+  </section>
+</main>
+
+<nav class="bottom-nav" aria-label="Primary navigation">
+  <button class="nav-item active" type="button" data-view="workouts" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 8v8M18 8v8M3.5 10.5v3M20.5 10.5v3M6 12h12M8.5 6.5v11M15.5 6.5v11"/></svg><span>Workouts</span></button>
+  <button class="nav-item" type="button" data-view="progression"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 18V9M10 18V5M16 18v-7M22 18V3"/><path d="M3 18h19"/></svg><span>Progression</span></button>
+  <button class="nav-item" type="button" data-view="rules"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 10v6M12 7.5h.01"/></svg><span>Rules & PCOS</span></button>
+</nav>
+</div>
+
+<script>
+(() => {
+  "use strict";
+
+  const state = { view: "workouts", day: "day1" };
+  const navItems = Array.from(document.querySelectorAll(".nav-item"));
+  const views = Array.from(document.querySelectorAll(".view"));
+  const segments = Array.from(document.querySelectorAll(".segment"));
+  const dayPanels = Array.from(document.querySelectorAll(".day-panel"));
+
+  function setView(viewName) {
+    state.view = viewName;
+    views.forEach(view => view.classList.toggle("active", view.id === `view-${viewName}`));
+    navItems.forEach(item => {
+      const active = item.dataset.view === viewName;
+      item.classList.toggle("active", active);
+      if (active) item.setAttribute("aria-current", "page");
+      else item.removeAttribute("aria-current");
+    });
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function setDay(dayName) {
+    state.day = dayName;
+    segments.forEach(segment => {
+      const active = segment.dataset.day === dayName;
+      segment.classList.toggle("active", active);
+      segment.setAttribute("aria-selected", String(active));
+      segment.tabIndex = active ? 0 : -1;
+    });
+    dayPanels.forEach(panel => panel.classList.toggle("active", panel.id === dayName));
+  }
+
+  navItems.forEach(item => item.addEventListener("click", () => setView(item.dataset.view)));
+  segments.forEach(segment => segment.addEventListener("click", () => setDay(segment.dataset.day)));
+
+  segments.forEach((segment, index) => {
+    segment.addEventListener("keydown", event => {
+      if (!["ArrowLeft","ArrowRight","Home","End"].includes(event.key)) return;
+      event.preventDefault();
+      let next = index;
+      if (event.key === "ArrowRight") next = Math.min(index + 1, segments.length - 1);
+      if (event.key === "ArrowLeft") next = Math.max(index - 1, 0);
+      if (event.key === "Home") next = 0;
+      if (event.key === "End") next = segments.length - 1;
+      segments[next].focus();
+      setDay(segments[next].dataset.day);
+    });
+  });
+
+  let touchStartX = 0;
+  let touchStartY = 0;
+  document.addEventListener("touchstart", event => {
+    if (event.touches.length === 1) {
+      touchStartX = event.touches[0].clientX;
+      touchStartY = event.touches[0].clientY;
+    }
+  }, { passive: true });
+
+  document.addEventListener("touchend", event => {
+    if (event.changedTouches.length !== 1 || state.view !== "workouts") return;
+    const dx = event.changedTouches[0].clientX - touchStartX;
+    const dy = event.changedTouches[0].clientY - touchStartY;
+    if (Math.abs(dx) < 75 || Math.abs(dx) < Math.abs(dy) * 1.4) return;
+    const current = segments.findIndex(segment => segment.dataset.day === state.day);
+    const next = dx < 0 ? Math.min(current + 1, segments.length - 1) : Math.max(current - 1, 0);
+    if (next !== current) setDay(segments[next].dataset.day);
+  }, { passive: true });
+})();
+</script>
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("./service-worker.js").catch(() => {});
+      });
+    }
+  </script>
+</body>
+</html>
